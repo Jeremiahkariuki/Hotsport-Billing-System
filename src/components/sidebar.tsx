@@ -284,10 +284,10 @@ export function Sidebar({ sessionCount = 1, voucherCount = 4, packageCount = 9 }
       <div className="p-3 border-t border-[#1a2233] flex items-center justify-between">
         <Link href="/login" className="flex items-center gap-2.5 min-w-0 hover:opacity-80 transition-opacity">
           <div className="w-7 h-7 rounded-full bg-gradient-to-tr from-cyan-600 to-indigo-600 flex items-center justify-center text-xs font-bold text-white shrink-0">
-            RL
+            JK
           </div>
           <div className="min-w-0">
-            <p className="text-xs font-medium text-slate-200 truncate leading-tight">Julius Kariuki</p>
+            <p className="text-xs font-medium text-slate-200 truncate leading-tight">Jeremy Kariuki</p>
             <p className="text-[10px] text-slate-400 truncate">RADALINK NETWORKS</p>
           </div>
         </Link>
