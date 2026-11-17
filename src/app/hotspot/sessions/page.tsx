@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { Sidebar } from "@/components/sidebar";
+import { ExtendSessionModal } from "@/components/extend-session-modal";
 import {
   Wifi,
   Power,
@@ -10,7 +11,8 @@ import {
   Search,
   CheckCircle2,
   AlertCircle,
-  HardDrive
+  HardDrive,
+  Clock
 } from "lucide-react";
 import { formatBytes } from "@/lib/utils";
 
@@ -18,6 +20,10 @@ export default function SessionsPage() {
   const [sessions, setSessions] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [kickingId, setKickingId] = useState<string | null>(null);
+
+  // Extend session modal state
+  const [extendModalOpen, setExtendModalOpen] = useState(false);
+  const [extendingSession, setExtendingSession] = useState<any | null>(null);
 
   const fetchSessions = async () => {
     try {
@@ -158,13 +164,30 @@ export default function SessionsPage() {
                           </span>
                         </td>
                         <td className="px-5 py-3.5 text-right">
-                          <button
-                            onClick={() => handleKick(s.id, s.macAddress)}
-                            disabled={kickingId === s.id}
-                            className="px-2.5 py-1 bg-red-500/15 hover:bg-red-500/25 text-red-300 border border-red-500/30 rounded-lg text-xs font-semibold transition-colors disabled:opacity-50"
-                          >
-                            {kickingId === s.id ? "Disconnecting..." : "Kick / Disconnect"}
-                          </button>
+                          <div className="flex items-center justify-end gap-2">
+                            {/* Extend Time Button */}
+                            <button
+                              onClick={() => {
+                                setExtendingSession(s);
+                                setExtendModalOpen(true);
+                              }}
+                              className="flex items-center gap-1.5 px-3 py-1.5 bg-indigo-600/20 hover:bg-indigo-600/35 text-indigo-300 hover:text-white border border-indigo-500/40 rounded-lg text-xs font-semibold transition-all active:scale-95 shadow-sm"
+                              title="Extend internet time for this session"
+                            >
+                              <Clock className="w-3.5 h-3.5 text-indigo-400" />
+                              <span>Extend Time</span>
+                            </button>
+
+                            {/* Kick / Disconnect Button */}
+                            <button
+                              onClick={() => handleKick(s.id, s.macAddress)}
+                              disabled={kickingId === s.id}
+                              className="px-3 py-1.5 bg-red-500/15 hover:bg-red-500/25 text-red-300 border border-red-500/30 rounded-lg text-xs font-semibold transition-colors disabled:opacity-50"
+                              title="Disconnect device from router"
+                            >
+                              {kickingId === s.id ? "Disconnecting..." : "Kick / Disconnect"}
+                            </button>
+                          </div>
                         </td>
                       </tr>
                     ))
@@ -175,6 +198,17 @@ export default function SessionsPage() {
           </div>
         </div>
       </div>
+
+      {/* Extend Session Modal */}
+      <ExtendSessionModal
+        isOpen={extendModalOpen}
+        onClose={() => {
+          setExtendModalOpen(false);
+          setExtendingSession(null);
+        }}
+        session={extendingSession}
+        onExtended={fetchSessions}
+      />
     </div>
   );
 }
