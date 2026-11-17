@@ -39,7 +39,7 @@ interface CaptivePortalPreviewProps {
 
 export function CaptivePortalPreview({
   template = "midnight",
-  companyName = "ZEUGEN TECH SOLUTION LTD",
+  companyName = "RADALINK NETWORKS LTD",
   tagline = "Fast, reliable internet access wherever you are",
   packages,
   currency = "KSh",
@@ -354,7 +354,7 @@ export function CaptivePortalPreview({
             <input
               type="text"
               required
-              placeholder="e.g. ZG-8472"
+              placeholder="e.g. RL-8472"
               value={voucherCode}
               onChange={(e) => setVoucherCode(e.target.value.toUpperCase())}
               className="w-full bg-black/30 border border-white/10 rounded-xl px-3.5 py-2.5 text-center text-base font-mono font-bold tracking-widest text-white uppercase focus:outline-none focus:border-indigo-500"

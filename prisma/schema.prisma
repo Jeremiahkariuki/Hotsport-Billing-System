@@ -9,11 +9,11 @@ generator client {
 
 model Settings {
   id              String   @id @default("default")
-  companyName     String   @default("ZEUGEN TECH SOLUTION LTD")
+  companyName     String   @default("RADALINK NETWORKS LTD")
   tagline         String   @default("Fast, reliable internet access wherever you are")
   currency        String   @default("KSh")
   supportPhone    String   @default("+254 700 000 000")
-  supportEmail    String   @default("support@zeugentech.co.ke")
+  supportEmail    String   @default("support@radalink.co.ke")
   logoUrl         String   @default("/logo.png")
   activeTemplate  String   @default("midnight") // classic, minimal, midnight, sales, forest, corporate, voucher, loyalty
   showTvAccess    Boolean  @default(true)

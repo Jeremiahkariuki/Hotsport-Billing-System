@@ -26,7 +26,7 @@ export default function VouchersPage() {
   // Generator form
   const [selectedPkgId, setSelectedPkgId] = useState("");
   const [count, setCount] = useState(10);
-  const [prefix, setPrefix] = useState("ZG");
+  const [prefix, setPrefix] = useState("RL");
   const [filterStatus, setFilterStatus] = useState("ALL");
   const [searchQuery, setSearchQuery] = useState("");
 

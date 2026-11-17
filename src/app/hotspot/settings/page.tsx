@@ -16,11 +16,11 @@ import {
 
 export default function SettingsPage() {
   const [settings, setSettings] = useState({
-    companyName: "ZEUGEN TECH SOLUTION LTD",
+    companyName: "RADALINK NETWORKS LTD",
     tagline: "Fast, reliable internet access wherever you are",
     currency: "KSh",
     supportPhone: "+254 712 345 678",
-    supportEmail: "billing@zeugentech.co.ke",
+    supportEmail: "billing@radalink.co.ke",
     mpesaShortcode: "174379",
     mpesaPasskey: "bfb279f9aa9bdbcf158e97dd71a467cd2e0c893059b10f78e6b72ada1ed2c919",
     mpesaConsumerKey: "sandbox_consumer_key",

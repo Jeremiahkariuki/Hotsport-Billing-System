@@ -19,7 +19,7 @@ export default function SetupPage() {
   const [copied, setCopied] = useState(false);
 
   const sampleScript = `# ==============================================================
-# ZEUGEN TECH / HOTSPOT BILLING SYSTEM - MIKROTIK AUTO SETUP SCRIPT
+# RADALINK - MIKROTIK HOTSPOT & BILLING AUTO SETUP SCRIPT
 # Run this directly in MikroTik WinBox Terminal
 # ==============================================================
 

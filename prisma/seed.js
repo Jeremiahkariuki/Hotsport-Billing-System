@@ -8,14 +8,17 @@ async function main() {
   // 1. Settings
   await prisma.settings.upsert({
     where: { id: 'default' },
-    update: {},
+    update: {
+      companyName: 'RADALINK NETWORKS LTD',
+      supportEmail: 'billing@radalink.co.ke',
+    },
     create: {
       id: 'default',
-      companyName: 'ZEUGEN TECH SOLUTION LTD',
+      companyName: 'RADALINK NETWORKS LTD',
       tagline: 'Fast, reliable internet access wherever you are',
       currency: 'KSh',
       supportPhone: '+254 712 345 678',
-      supportEmail: 'billing@zeugentech.co.ke',
+      supportEmail: 'billing@radalink.co.ke',
       logoUrl: '/logo.png',
       activeTemplate: 'midnight',
       showTvAccess: true,

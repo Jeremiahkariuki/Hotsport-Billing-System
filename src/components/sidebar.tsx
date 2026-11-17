@@ -4,6 +4,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import {
   Wifi,
+  Radio,
   LayoutDashboard,
   Users,
   Layers,
@@ -38,10 +39,10 @@ export function Sidebar({ sessionCount = 1, voucherCount = 4, packageCount = 9 }
       {/* Brand Header */}
       <div className="h-14 px-4 flex items-center justify-between border-b border-[#1a2233]">
         <Link href="/hotspot/overview" className="flex items-center gap-2.5 font-semibold text-white">
-          <div className="w-8 h-8 rounded-lg bg-gradient-to-tr from-indigo-600 to-purple-500 flex items-center justify-center text-white shadow-md shadow-indigo-500/20">
-            <Wifi className="w-4 h-4 text-white" />
+          <div className="w-8 h-8 rounded-lg bg-gradient-to-tr from-cyan-500 via-indigo-600 to-purple-600 flex items-center justify-center text-white shadow-md shadow-indigo-500/20">
+            <Radio className="w-4 h-4 text-white" />
           </div>
-          <span className="text-base font-bold tracking-tight text-white">VunaFlow</span>
+          <span className="text-base font-bold tracking-tight text-white">RadaLink</span>
         </Link>
         <button className="text-slate-400 hover:text-white p-1 rounded hover:bg-[#1a2336] transition-colors">
           <ChevronLeft className="w-4 h-4" />
@@ -239,15 +240,15 @@ export function Sidebar({ sessionCount = 1, voucherCount = 4, packageCount = 9 }
         </div>
       </div>
 
-      {/* User Footer matching screenshot */}
+      {/* User Footer */}
       <div className="p-3 border-t border-[#1a2233] flex items-center justify-between">
         <div className="flex items-center gap-2.5 min-w-0">
-          <div className="w-7 h-7 rounded-full bg-slate-700 flex items-center justify-center text-xs font-bold text-slate-200 shrink-0">
-            JZ
+          <div className="w-7 h-7 rounded-full bg-gradient-to-tr from-cyan-600 to-indigo-600 flex items-center justify-center text-xs font-bold text-white shrink-0">
+            RL
           </div>
           <div className="min-w-0">
-            <p className="text-xs font-medium text-slate-200 truncate leading-tight">Julius Zeugen</p>
-            <p className="text-[10px] text-slate-400 truncate">ZEUGEN TECH LTD</p>
+            <p className="text-xs font-medium text-slate-200 truncate leading-tight">Julius Kariuki</p>
+            <p className="text-[10px] text-slate-400 truncate">RADALINK NETWORKS</p>
           </div>
         </div>
         <button

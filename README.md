@@ -1,10 +1,16 @@
-# Hotspot & PPPoE Billing System
+# RadaLink - Hotspot & PPPoE Billing System
 
-A modern, full-stack ISP Hotspot & PPPoE billing and bandwidth management system with Safaricom Daraja M-Pesa integration, modeled after the **VunaFlow** interface and architecture.
+**RadaLink** is a modern, full-stack ISP Hotspot & PPPoE billing and bandwidth management platform tailored for MikroTik routers and Safaricom Daraja M-Pesa automated payments.
 
 ---
 
-## 🚀 Features
+## ⚡ What is RadaLink?
+
+*Rada* (meaning alert, connected, and in-tune) + *Link* (uninterrupted internet connection). **RadaLink** provides ISPs, hoteliers, cafes, universities, and neighborhood wireless providers with a hands-free, automated revenue collection engine.
+
+---
+
+## 🚀 Key Modules & Capabilities
 
 - **Captive Portal Engine with Live Mobile Preview**:
   - Live interactive mobile preview inside the admin dashboard.
@@ -24,7 +30,7 @@ A modern, full-stack ISP Hotspot & PPPoE billing and bandwidth management system
   - Remote active session monitoring and disconnect/kick actions.
   - Automated 1-click RouterOS Terminal Setup Script (`.rsc`) configuring API access, Walled Garden for M-Pesa, and Captive Portal redirects.
 - **Voucher Management**:
-  - Batch voucher generator with custom prefixes (e.g., `ZG-8472`).
+  - Batch voucher generator with custom prefixes (e.g., `RL-8472`).
   - Printable voucher scratch-card sheets.
 - **PPPoE Subscribers Management**:
   - Manage monthly home and business fiber/wireless clients, static IPs, and speed profiles.

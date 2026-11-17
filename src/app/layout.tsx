@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "VunaFlow - Hotspot & PPPoE Billing System",
+  title: "RadaLink - Hotspot & PPPoE Billing System",
   description: "MikroTik Hotspot Billing Platform with Safaricom Daraja M-Pesa Integration",
 };
 
