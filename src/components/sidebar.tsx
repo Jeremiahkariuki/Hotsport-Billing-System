@@ -14,12 +14,17 @@ import {
   ChevronLeft,
   Search,
   LogOut,
-  QrCode,
   Network,
   Ticket,
   Clock,
   CheckCircle2,
-  AlertCircle
+  AlertCircle,
+  Zap,
+  Activity,
+  UserCheck,
+  ShieldAlert,
+  UserPlus,
+  RefreshCw
 } from "lucide-react";
 
 interface SidebarProps {
@@ -30,9 +35,6 @@ interface SidebarProps {
 
 export function Sidebar({ sessionCount = 1, voucherCount = 4, packageCount = 9 }: SidebarProps) {
   const pathname = usePathname();
-
-  const isHotspotActive = pathname.startsWith("/hotspot");
-  const isPppoeActive = pathname.startsWith("/pppoe");
 
   return (
     <aside className="w-64 bg-[#0d111a] border-r border-[#1a2233] flex flex-col h-screen select-none shrink-0 text-sm">
@@ -203,46 +205,84 @@ export function Sidebar({ sessionCount = 1, voucherCount = 4, packageCount = 9 }
             >
               <span>Customers</span>
               <span className="text-[10px] bg-[#1a253d] text-slate-300 px-1.5 py-0.2 rounded font-mono">
-                0
+                2
               </span>
             </Link>
-            <div className="px-2.5 py-1.5 text-xs text-slate-300 hover:text-slate-200 cursor-pointer">
-              Online now
-            </div>
-            <div className="px-2.5 py-1.5 text-xs text-slate-300 hover:text-slate-200 cursor-pointer">
-              Expiring soon
-            </div>
-            <div className="px-2.5 py-1.5 text-xs text-slate-300 hover:text-slate-200 cursor-pointer">
-              Plans
-            </div>
-            <div className="px-2.5 py-1.5 text-xs text-slate-300 hover:text-slate-200 cursor-pointer">
-              Leads
-            </div>
-            <div className="px-2.5 py-1.5 text-xs text-slate-300 hover:text-slate-200 cursor-pointer">
-              Router sync
-            </div>
+
+            <Link
+              href="/pppoe/online"
+              className={`flex items-center justify-between px-2.5 py-1.5 rounded-md text-xs transition-colors ${
+                pathname === "/pppoe/online"
+                  ? "bg-[#182238] text-indigo-400 font-medium"
+                  : "text-slate-400 hover:text-slate-200 hover:bg-[#141b29]"
+              }`}
+            >
+              <span>Online now</span>
+              <span className="text-[10px] bg-emerald-500/15 text-emerald-400 px-1.5 py-0.2 rounded font-mono">
+                2
+              </span>
+            </Link>
+
+            <Link
+              href="/pppoe/expiring"
+              className={`flex items-center justify-between px-2.5 py-1.5 rounded-md text-xs transition-colors ${
+                pathname === "/pppoe/expiring"
+                  ? "bg-[#182238] text-indigo-400 font-medium"
+                  : "text-slate-400 hover:text-slate-200 hover:bg-[#141b29]"
+              }`}
+            >
+              <span>Expiring soon</span>
+              <span className="text-[10px] bg-amber-500/15 text-amber-300 px-1.5 py-0.2 rounded font-mono">
+                1
+              </span>
+            </Link>
+
+            <Link
+              href="/pppoe/plans"
+              className={`flex items-center justify-between px-2.5 py-1.5 rounded-md text-xs transition-colors ${
+                pathname === "/pppoe/plans"
+                  ? "bg-[#182238] text-indigo-400 font-medium"
+                  : "text-slate-400 hover:text-slate-200 hover:bg-[#141b29]"
+              }`}
+            >
+              <span>Plans</span>
+              <span className="text-[10px] bg-[#1a253d] text-slate-300 px-1.5 py-0.2 rounded font-mono">
+                4
+              </span>
+            </Link>
+
+            <Link
+              href="/pppoe/leads"
+              className={`flex items-center justify-between px-2.5 py-1.5 rounded-md text-xs transition-colors ${
+                pathname === "/pppoe/leads"
+                  ? "bg-[#182238] text-indigo-400 font-medium"
+                  : "text-slate-400 hover:text-slate-200 hover:bg-[#141b29]"
+              }`}
+            >
+              <span>Leads</span>
+              <span className="text-[10px] bg-indigo-500/15 text-indigo-300 px-1.5 py-0.2 rounded font-mono">
+                3
+              </span>
+            </Link>
+
+            <Link
+              href="/pppoe/sync"
+              className={`flex items-center justify-between px-2.5 py-1.5 rounded-md text-xs transition-colors ${
+                pathname === "/pppoe/sync"
+                  ? "bg-[#182238] text-indigo-400 font-medium"
+                  : "text-slate-400 hover:text-slate-200 hover:bg-[#141b29]"
+              }`}
+            >
+              <span>Router sync</span>
+              <span className="text-[10px] text-emerald-400">●</span>
+            </Link>
           </div>
         </div>
       </div>
 
-      {/* App Promotion Card */}
-      <div className="p-3 border-t border-[#1a2233] bg-[#0c1018]">
-        <div className="flex items-center gap-3 p-2 rounded-lg bg-[#121824] border border-[#1b2538]">
-          <div className="w-10 h-10 bg-white rounded p-1 flex items-center justify-center shrink-0">
-            <QrCode className="w-8 h-8 text-black" />
-          </div>
-          <div className="text-xs">
-            <p className="font-medium text-slate-200 leading-tight">Get the app on your phone</p>
-            <p className="text-[11px] text-slate-400 mt-0.5">
-              Scan with phone, or <span className="text-indigo-400 hover:underline cursor-pointer">open Google Play</span>.
-            </p>
-          </div>
-        </div>
-      </div>
-
-      {/* User Footer */}
+      {/* User Footer with Link to Login / Logout */}
       <div className="p-3 border-t border-[#1a2233] flex items-center justify-between">
-        <div className="flex items-center gap-2.5 min-w-0">
+        <Link href="/login" className="flex items-center gap-2.5 min-w-0 hover:opacity-80 transition-opacity">
           <div className="w-7 h-7 rounded-full bg-gradient-to-tr from-cyan-600 to-indigo-600 flex items-center justify-center text-xs font-bold text-white shrink-0">
             RL
           </div>
@@ -250,13 +290,14 @@ export function Sidebar({ sessionCount = 1, voucherCount = 4, packageCount = 9 }
             <p className="text-xs font-medium text-slate-200 truncate leading-tight">Julius Kariuki</p>
             <p className="text-[10px] text-slate-400 truncate">RADALINK NETWORKS</p>
           </div>
-        </div>
-        <button
-          title="Sign out"
-          className="text-slate-400 hover:text-slate-200 p-1.5 rounded hover:bg-[#1a2336] transition-colors"
+        </Link>
+        <Link
+          href="/login"
+          title="Sign out / Switch account"
+          className="text-slate-400 hover:text-red-400 p-1.5 rounded hover:bg-[#1a2336] transition-colors"
         >
           <LogOut className="w-3.5 h-3.5" />
-        </button>
+        </Link>
       </div>
     </aside>
   );
