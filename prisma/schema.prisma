@@ -7,124 +7,172 @@ generator client {
   provider = "prisma-client-js"
 }
 
+model Tenant {
+  id                  String          @id @default(uuid())
+  slug                String          @unique // e.g. "radalink", "safarinet", "coastwifi"
+  name                String          // Business / Network Name e.g. "RadaLink Networks"
+  ownerName           String          // e.g. "Jeremy Kariuki"
+  email               String          @unique
+  phone               String
+  password            String          @default("password123")
+  plan                String          @default("STARTER") // STARTER, PRO, ENTERPRISE
+  status              String          @default("ACTIVE")  // ACTIVE, SUSPENDED, TRIAL
+  tagline             String          @default("Fast, reliable internet access wherever you are")
+  currency            String          @default("KSh")
+  supportPhone        String?
+  supportEmail        String?
+  logoUrl             String          @default("/logo.png")
+  activeTemplate      String          @default("midnight") // classic, minimal, midnight, sales, forest, corporate, voucher, loyalty
+  showTvAccess        Boolean         @default(true)
+  mpesaShortcode      String          @default("174379")
+  mpesaPasskey        String          @default("bfb279f9aa9bdbcf158e97dd71a467cd2e0c893059b10f78e6b72ada1ed2c919")
+  mpesaConsumerKey    String          @default("sandbox_consumer_key")
+  mpesaConsumerSecret String          @default("sandbox_consumer_secret")
+  mpesaEnv            String          @default("sandbox") // sandbox, production
+  createdAt           DateTime        @default(now())
+  updatedAt           DateTime        @updatedAt
+
+  packages            Package[]
+  vouchers            Voucher[]
+  transactions        Transaction[]
+  sessions            ActiveSession[]
+  routers             RouterConfig[]
+  pppoeCustomers      PppoeCustomer[]
+  macBindings         MacBinding[]
+}
+
 model Settings {
-  id              String   @id @default("default")
-  companyName     String   @default("RADALINK NETWORKS LTD")
-  tagline         String   @default("Fast, reliable internet access wherever you are")
-  currency        String   @default("KSh")
-  supportPhone    String   @default("+254 700 000 000")
-  supportEmail    String   @default("support@radalink.co.ke")
-  logoUrl         String   @default("/logo.png")
-  activeTemplate  String   @default("midnight") // classic, minimal, midnight, sales, forest, corporate, voucher, loyalty
-  showTvAccess    Boolean  @default(true)
-  mpesaShortcode  String   @default("174379")
-  mpesaPasskey    String   @default("bfb279f9aa9bdbcf158e97dd71a467cd2e0c893059b10f78e6b72ada1ed2c919")
-  mpesaConsumerKey String  @default("sandbox_consumer_key")
-  mpesaConsumerSecret String @default("sandbox_consumer_secret")
-  mpesaEnv        String   @default("sandbox") // sandbox, production
-  updatedAt       DateTime @updatedAt
+  id                  String   @id @default("default")
+  companyName         String   @default("RADALINK NETWORKS LTD")
+  tagline             String   @default("Fast, reliable internet access wherever you are")
+  currency            String   @default("KSh")
+  supportPhone        String   @default("+254 700 000 000")
+  supportEmail        String   @default("support@radalink.co.ke")
+  logoUrl             String   @default("/logo.png")
+  activeTemplate      String   @default("midnight") // classic, minimal, midnight, sales, forest, corporate, voucher, loyalty
+  showTvAccess        Boolean  @default(true)
+  mpesaShortcode      String   @default("174379")
+  mpesaPasskey        String   @default("bfb279f9aa9bdbcf158e97dd71a467cd2e0c893059b10f78e6b72ada1ed2c919")
+  mpesaConsumerKey    String   @default("sandbox_consumer_key")
+  mpesaConsumerSecret String   @default("sandbox_consumer_secret")
+  mpesaEnv            String   @default("sandbox") // sandbox, production
+  updatedAt           DateTime @updatedAt
 }
 
 model Package {
-  id                  String   @id @default(uuid())
-  name                String   // e.g. "VIEW ONCE 15 MINUTES", "SOLO 3 Hours"
-  durationMinutes     Int      // 15, 60, 180, 360, 1440, etc.
-  price               Float    // e.g. 3.00, 5.00, 20.00
-  downloadSpeedMbps   Float    // e.g. 1.0, 5.0, 10.0 (0 for no speed cap)
-  uploadSpeedMbps     Float    // e.g. 1.0, 2.0 (0 for no speed cap)
-  simultaneousDevices Int      @default(1)
-  deviceLockMode      String   @default("STRICT") // STRICT (locked to 1st device MAC), FLEXIBLE (1 device at a time)
-  isActive            Boolean  @default(true)
-  tag                 String?  // e.g. "Popular", "Best Value", "Fast"
-  createdAt           DateTime @default(now())
-  updatedAt           DateTime @updatedAt
+  id                  String        @id @default(uuid())
+  tenantId            String?
+  tenant              Tenant?       @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  name                String        // e.g. "VIEW ONCE 15 MINUTES", "SOLO 3 Hours"
+  durationMinutes     Int           // 15, 60, 180, 360, 1440, etc.
+  price               Float         // e.g. 3.00, 5.00, 20.00
+  downloadSpeedMbps   Float         // e.g. 1.0, 5.0, 10.0 (0 for no speed cap)
+  uploadSpeedMbps     Float         // e.g. 1.0, 2.0 (0 for no speed cap)
+  simultaneousDevices Int           @default(1)
+  deviceLockMode      String        @default("STRICT") // STRICT (locked to 1st device MAC), FLEXIBLE (1 device at a time)
+  isActive            Boolean       @default(true)
+  tag                 String?       // e.g. "Popular", "Best Value", "Fast"
+  createdAt           DateTime      @default(now())
+  updatedAt           DateTime      @updatedAt
   vouchers            Voucher[]
   transactions        Transaction[]
 }
 
 model Voucher {
-  id            String    @id @default(uuid())
-  code          String    @unique
+  id            String         @id @default(uuid())
+  tenantId      String?
+  tenant        Tenant?        @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  code          String         @unique
   packageId     String
-  package       Package   @relation(fields: [packageId], references: [id], onDelete: Cascade)
-  status        String    @default("UNUSED") // UNUSED, ACTIVE, EXPIRED, REVOKED
+  package       Package        @relation(fields: [packageId], references: [id], onDelete: Cascade)
+  status        String         @default("UNUSED") // UNUSED, ACTIVE, EXPIRED, REVOKED
   batchId       String?
   usedByMac     String?
   usedByPhone   String?
   activatedAt   DateTime?
   expiresAt     DateTime?
-  createdAt     DateTime  @default(now())
+  createdAt     DateTime       @default(now())
 }
 
 model ActiveSession {
-  id            String   @id @default(uuid())
-  username      String   // Voucher code or phone
+  id            String         @id @default(uuid())
+  tenantId      String?
+  tenant        Tenant?        @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  username      String         // Voucher code or phone
   ipAddress     String
   macAddress    String
-  uptimeSeconds Int      @default(0)
-  bytesIn       BigInt   @default(0)
-  bytesOut      BigInt   @default(0)
-  signal        String?  // e.g. "-65 dBm"
+  uptimeSeconds Int            @default(0)
+  bytesIn       BigInt         @default(0)
+  bytesOut      BigInt         @default(0)
+  signal        String?        // e.g. "-65 dBm"
   packageName   String?
   expiresAt     DateTime?
-  deviceType    String?  // Phone, Laptop, TV, Unknown
-  lastSeen      DateTime @default(now())
+  deviceType    String?        // Phone, Laptop, TV, Unknown
+  lastSeen      DateTime       @default(now())
 }
 
 model Transaction {
-  id                String   @id @default(uuid())
-  checkoutRequestId String?  @unique
+  id                String      @id @default(uuid())
+  tenantId          String?
+  tenant            Tenant?     @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  checkoutRequestId String?     @unique
   merchantRequestId String?
-  receiptNumber     String?  // M-Pesa receipt e.g. QKJ4829JDE
+  receiptNumber     String?     // M-Pesa receipt e.g. QKJ4829JDE
   phone             String
   amount            Float
-  status            String   @default("PENDING") // PENDING, COMPLETED, FAILED
+  status            String      @default("PENDING") // PENDING, COMPLETED, FAILED
   packageId         String?
-  package           Package? @relation(fields: [packageId], references: [id], onDelete: SetNull)
+  package           Package?    @relation(fields: [packageId], references: [id], onDelete: SetNull)
   voucherCode       String?
   rawCallback       String?
-  createdAt         DateTime @default(now())
-  updatedAt         DateTime @updatedAt
+  createdAt         DateTime    @default(now())
+  updatedAt         DateTime    @updatedAt
 }
 
 model RouterConfig {
-  id            String   @id @default(uuid())
-  name          String   @default("Main MikroTik Router")
-  ipOrHost      String   @default("192.168.88.1")
-  apiPort       Int      @default(8728)
-  username      String   @default("admin")
-  password      String   @default("")
-  status        String   @default("CONNECTED") // CONNECTED, DISCONNECTED, ERROR
-  model         String   @default("RB750Gr3 (hEX)")
-  routerOsVer   String   @default("v7.16")
-  cpuLoad       Int      @default(14)
-  freeMemoryMb  Int      @default(185)
-  uptime        String   @default("14d 06:22:15")
-  activeUsers   Int      @default(1)
-  lastSyncAt    DateTime @default(now())
+  id            String         @id @default(uuid())
+  tenantId      String?
+  tenant        Tenant?        @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  name          String         @default("Main MikroTik Router")
+  ipOrHost      String         @default("192.168.88.1")
+  apiPort       Int            @default(8728)
+  username      String         @default("admin")
+  password      String         @default("")
+  status        String         @default("CONNECTED") // CONNECTED, DISCONNECTED, ERROR
+  model         String         @default("RB750Gr3 (hEX)")
+  routerOsVer   String         @default("v7.16")
+  cpuLoad       Int            @default(14)
+  freeMemoryMb  Int            @default(185)
+  uptime        String         @default("14d 06:22:15")
+  activeUsers   Int            @default(1)
+  lastSyncAt    DateTime       @default(now())
 }
 
 model PppoeCustomer {
-  id          String   @id @default(uuid())
-  name        String
-  phone       String
-  username    String   @unique
-  password    String
-  profile     String   // e.g. "10Mbps_Home"
-  ipAddress   String?  // Static IP or pool
-  status      String   @default("ACTIVE") // ACTIVE, EXPIRED, SUSPENDED
-  price       Float
-  expiresAt   DateTime
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  id            String         @id @default(uuid())
+  tenantId      String?
+  tenant        Tenant?        @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  name          String
+  phone         String
+  username      String         @unique
+  password      String
+  profile       String         // e.g. "10Mbps_Home"
+  ipAddress     String?        // Static IP or pool
+  status        String         @default("ACTIVE") // ACTIVE, EXPIRED, SUSPENDED
+  price         Float
+  expiresAt     DateTime
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @updatedAt
 }
 
 model MacBinding {
-  id          String   @id @default(uuid())
-  macAddress  String   @unique
-  label       String   // e.g. "Living Room Samsung Smart TV"
-  phone       String?
-  type        String   @default("bypassed") // bypassed, regular, blocked
-  expiresAt   DateTime?
-  createdAt   DateTime @default(now())
+  id            String         @id @default(uuid())
+  tenantId      String?
+  tenant        Tenant?        @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  macAddress    String         @unique
+  label         String         // e.g. "Living Room Samsung Smart TV"
+  phone         String?
+  type          String         @default("bypassed") // bypassed, regular, blocked
+  expiresAt     DateTime?
+  createdAt     DateTime       @default(now())
 }

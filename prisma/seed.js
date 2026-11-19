@@ -3,9 +3,67 @@ const { PrismaClient } = require('@prisma/client');
 const prisma = new PrismaClient();
 
 async function main() {
-  console.log('Seeding database with default VunaFlow/Zeugen Tech data...');
+  console.log('Seeding multi-tenant SaaS database for RadaLink...');
 
-  // 1. Settings
+  // 1. Primary Tenant: RadaLink Networks (Jeremy Kariuki)
+  const radaTenant = await prisma.tenant.upsert({
+    where: { slug: 'radalink' },
+    update: {
+      ownerName: 'Jeremy Kariuki',
+      name: 'RADALINK NETWORKS LTD',
+      email: 'admin@radalink.co.ke',
+      phone: '+254 712 345 678',
+      activeTemplate: 'midnight',
+    },
+    create: {
+      slug: 'radalink',
+      name: 'RADALINK NETWORKS LTD',
+      ownerName: 'Jeremy Kariuki',
+      email: 'admin@radalink.co.ke',
+      phone: '+254 712 345 678',
+      password: 'password123',
+      plan: 'ENTERPRISE',
+      tagline: 'Fast, reliable internet access wherever you are',
+      currency: 'KSh',
+      supportEmail: 'billing@radalink.co.ke',
+      supportPhone: '+254 712 345 678',
+      activeTemplate: 'midnight',
+      showTvAccess: true,
+      mpesaShortcode: '174379',
+      mpesaPasskey: 'bfb279f9aa9bdbcf158e97dd71a467cd2e0c893059b10f78e6b72ada1ed2c919',
+      mpesaConsumerKey: 'sandbox_consumer_key',
+      mpesaConsumerSecret: 'sandbox_consumer_secret',
+      mpesaEnv: 'sandbox',
+    },
+  });
+
+  // 2. Second Sample Tenant: SafariNet High-Speed WiFi (Brian Omondi)
+  const safariTenant = await prisma.tenant.upsert({
+    where: { slug: 'safarinet' },
+    update: {},
+    create: {
+      slug: 'safarinet',
+      name: 'SafariNet High-Speed WiFi',
+      ownerName: 'Brian Omondi',
+      email: 'brian@safarinet.co.ke',
+      phone: '+254 722 000 111',
+      password: 'password123',
+      plan: 'PRO',
+      tagline: 'Unlimited high-speed internet for estates and cafes',
+      currency: 'KSh',
+      supportEmail: 'support@safarinet.co.ke',
+      supportPhone: '+254 722 000 111',
+      activeTemplate: 'forest',
+      showTvAccess: true,
+      mpesaShortcode: '174379',
+      mpesaPasskey: 'bfb279f9aa9bdbcf158e97dd71a467cd2e0c893059b10f78e6b72ada1ed2c919',
+      mpesaConsumerKey: 'sandbox_consumer_key',
+      mpesaConsumerSecret: 'sandbox_consumer_secret',
+      mpesaEnv: 'sandbox',
+    },
+  });
+
+  // 3. Global Settings Fallback
   await prisma.settings.upsert({
     where: { id: 'default' },
     update: {
@@ -30,11 +88,167 @@ async function main() {
     },
   });
 
-  // 2. Router
-  const existingRouter = await prisma.routerConfig.findFirst();
+  // 4. RadaLink Packages
+  const packagesData = [
+    {
+      name: 'VIEW ONCE 15 MINUTES',
+      durationMinutes: 15,
+      price: 3.0,
+      downloadSpeedMbps: 1.0,
+      uploadSpeedMbps: 1.0,
+      simultaneousDevices: 1,
+      deviceLockMode: 'STRICT',
+      tag: 'Quick Pass',
+      tenantId: radaTenant.id,
+    },
+    {
+      name: 'VIEW ONCE 1 HOUR',
+      durationMinutes: 60,
+      price: 5.0,
+      downloadSpeedMbps: 1.0,
+      uploadSpeedMbps: 1.0,
+      simultaneousDevices: 1,
+      deviceLockMode: 'STRICT',
+      tag: 'Popular',
+      tenantId: radaTenant.id,
+    },
+    {
+      name: 'SOLO 3 Hours',
+      durationMinutes: 180,
+      price: 10.0,
+      downloadSpeedMbps: 2.0,
+      uploadSpeedMbps: 2.0,
+      simultaneousDevices: 1,
+      deviceLockMode: 'STRICT',
+      tenantId: radaTenant.id,
+    },
+    {
+      name: '2 DEVICE 3 Hours',
+      durationMinutes: 180,
+      price: 15.0,
+      downloadSpeedMbps: 3.0,
+      uploadSpeedMbps: 3.0,
+      simultaneousDevices: 2,
+      deviceLockMode: 'FLEXIBLE',
+      tag: 'Duo',
+      tenantId: radaTenant.id,
+    },
+    {
+      name: 'SOLO 6 HOURS',
+      durationMinutes: 360,
+      price: 20.0,
+      downloadSpeedMbps: 3.0,
+      uploadSpeedMbps: 3.0,
+      simultaneousDevices: 1,
+      deviceLockMode: 'STRICT',
+      tenantId: radaTenant.id,
+    },
+    {
+      name: 'SOLO 12Hours',
+      durationMinutes: 720,
+      price: 30.0,
+      downloadSpeedMbps: 3.0,
+      uploadSpeedMbps: 3.0,
+      simultaneousDevices: 1,
+      deviceLockMode: 'STRICT',
+      tenantId: radaTenant.id,
+    },
+    {
+      name: '2 DEVICE 12Hours',
+      durationMinutes: 720,
+      price: 50.0,
+      downloadSpeedMbps: 4.0,
+      uploadSpeedMbps: 4.0,
+      simultaneousDevices: 2,
+      deviceLockMode: 'FLEXIBLE',
+      tenantId: radaTenant.id,
+    },
+    {
+      name: 'SOLO 24 HOUR',
+      durationMinutes: 1440,
+      price: 60.0,
+      downloadSpeedMbps: 5.0,
+      uploadSpeedMbps: 5.0,
+      simultaneousDevices: 1,
+      deviceLockMode: 'STRICT',
+      tag: 'Best Value',
+      tenantId: radaTenant.id,
+    },
+    {
+      name: '2 DEVICE 1 Day',
+      durationMinutes: 1440,
+      price: 120.0,
+      downloadSpeedMbps: 5.0,
+      uploadSpeedMbps: 5.0,
+      simultaneousDevices: 2,
+      deviceLockMode: 'FLEXIBLE',
+      tenantId: radaTenant.id,
+    },
+  ];
+
+  for (const pkg of packagesData) {
+    const existing = await prisma.package.findFirst({
+      where: { name: pkg.name, tenantId: radaTenant.id },
+    });
+    if (!existing) {
+      await prisma.package.create({ data: pkg });
+    }
+  }
+
+  // 5. SafariNet Packages (Different pricing & branding!)
+  const safariPackages = [
+    {
+      name: 'SAFARI EXPRESS 1 HOUR',
+      durationMinutes: 60,
+      price: 10.0,
+      downloadSpeedMbps: 3.0,
+      uploadSpeedMbps: 2.0,
+      simultaneousDevices: 1,
+      deviceLockMode: 'STRICT',
+      tag: 'Express',
+      tenantId: safariTenant.id,
+    },
+    {
+      name: 'SAFARI DAY PASS (24 HRS)',
+      durationMinutes: 1440,
+      price: 50.0,
+      downloadSpeedMbps: 5.0,
+      uploadSpeedMbps: 5.0,
+      simultaneousDevices: 1,
+      deviceLockMode: 'STRICT',
+      tag: 'Daily Unlimited',
+      tenantId: safariTenant.id,
+    },
+    {
+      name: 'SAFARI WEEKLY PASS (7 DAYS)',
+      durationMinutes: 10080,
+      price: 250.0,
+      downloadSpeedMbps: 8.0,
+      uploadSpeedMbps: 5.0,
+      simultaneousDevices: 2,
+      deviceLockMode: 'FLEXIBLE',
+      tag: 'Best Value',
+      tenantId: safariTenant.id,
+    },
+  ];
+
+  for (const pkg of safariPackages) {
+    const existing = await prisma.package.findFirst({
+      where: { name: pkg.name, tenantId: safariTenant.id },
+    });
+    if (!existing) {
+      await prisma.package.create({ data: pkg });
+    }
+  }
+
+  // 6. Router for RadaLink
+  const existingRouter = await prisma.routerConfig.findFirst({
+    where: { tenantId: radaTenant.id },
+  });
   if (!existingRouter) {
     await prisma.routerConfig.create({
       data: {
+        tenantId: radaTenant.id,
         name: 'Main MikroTik Router (Hotspot)',
         ipOrHost: '192.168.88.1',
         apiPort: 8728,
@@ -46,143 +260,28 @@ async function main() {
         cpuLoad: 12,
         freeMemoryMb: 198,
         uptime: '14d 06:22:15',
-        activeUsers: 1,
+        activeUsers: 2,
       },
     });
   }
 
-  // 3. Packages matching the exact screenshots
-  const packagesData = [
-    {
-      name: 'VIEW ONCE 15 MINUTES',
-      durationMinutes: 15,
-      price: 3.0,
-      downloadSpeedMbps: 1.0,
-      uploadSpeedMbps: 1.0,
-      simultaneousDevices: 1,
-      deviceLockMode: 'STRICT',
-      tag: 'Quick Pass',
-    },
-    {
-      name: 'VIEW ONCE 1 HOUR',
-      durationMinutes: 60,
-      price: 5.0,
-      downloadSpeedMbps: 1.0,
-      uploadSpeedMbps: 1.0,
-      simultaneousDevices: 1,
-      deviceLockMode: 'STRICT',
-      tag: 'Popular',
-    },
-    {
-      name: 'SOLO 3 Hours',
-      durationMinutes: 180,
-      price: 10.0,
-      downloadSpeedMbps: 2.0,
-      uploadSpeedMbps: 2.0,
-      simultaneousDevices: 1,
-      deviceLockMode: 'STRICT',
-    },
-    {
-      name: '2 DEVICE 3 Hours',
-      durationMinutes: 180,
-      price: 15.0,
-      downloadSpeedMbps: 3.0,
-      uploadSpeedMbps: 3.0,
-      simultaneousDevices: 2,
-      deviceLockMode: 'FLEXIBLE',
-      tag: 'Duo',
-    },
-    {
-      name: 'SOLO 6 HOURS',
-      durationMinutes: 360,
-      price: 20.0,
-      downloadSpeedMbps: 3.0,
-      uploadSpeedMbps: 3.0,
-      simultaneousDevices: 1,
-      deviceLockMode: 'STRICT',
-    },
-    {
-      name: 'SOLO 12Hours',
-      durationMinutes: 720,
-      price: 30.0,
-      downloadSpeedMbps: 3.0,
-      uploadSpeedMbps: 3.0,
-      simultaneousDevices: 1,
-      deviceLockMode: 'STRICT',
-    },
-    {
-      name: '2 DEVICE 12Hours',
-      durationMinutes: 720,
-      price: 50.0,
-      downloadSpeedMbps: 4.0,
-      uploadSpeedMbps: 4.0,
-      simultaneousDevices: 2,
-      deviceLockMode: 'FLEXIBLE',
-    },
-    {
-      name: 'SOLO 24 HOUR',
-      durationMinutes: 1440,
-      price: 60.0,
-      downloadSpeedMbps: 5.0,
-      uploadSpeedMbps: 5.0,
-      simultaneousDevices: 1,
-      deviceLockMode: 'STRICT',
-      tag: 'Best Value',
-    },
-    {
-      name: '2 DEVICE 1 Day',
-      durationMinutes: 1440,
-      price: 120.0,
-      downloadSpeedMbps: 5.0,
-      uploadSpeedMbps: 5.0,
-      simultaneousDevices: 2,
-      deviceLockMode: 'FLEXIBLE',
-    },
-  ];
-
-  for (const pkg of packagesData) {
-    const existing = await prisma.package.findFirst({ where: { name: pkg.name } });
-    if (!existing) {
-      await prisma.package.create({ data: pkg });
-    }
-  }
-
-  // 4. Sample active session
-  const existingSession = await prisma.activeSession.findFirst();
-  if (!existingSession) {
-    const p1 = await prisma.package.findFirst({ where: { name: 'VIEW ONCE 1 HOUR' } });
-    await prisma.activeSession.create({
-      data: {
-        username: '0712345678',
-        ipAddress: '192.168.88.245',
-        macAddress: 'DC:A6:32:89:FE:12',
-        uptimeSeconds: 1420,
-        bytesIn: BigInt(45200000),
-        bytesOut: BigInt(189000000),
-        signal: '-58 dBm',
-        packageName: p1 ? p1.name : 'VIEW ONCE 1 HOUR',
-        deviceType: 'Phone',
-      },
-    });
-  }
-
-  // 5. Initial vouchers
-  const pkg1 = await prisma.package.findFirst();
+  // 7. Vouchers
+  const pkg1 = await prisma.package.findFirst({ where: { tenantId: radaTenant.id } });
   if (pkg1) {
-    const count = await prisma.voucher.count();
+    const count = await prisma.voucher.count({ where: { tenantId: radaTenant.id } });
     if (count === 0) {
       await prisma.voucher.createMany({
         data: [
-          { code: 'ZG-8472', packageId: pkg1.id, status: 'UNUSED', batchId: 'BATCH-001' },
-          { code: 'ZG-1934', packageId: pkg1.id, status: 'UNUSED', batchId: 'BATCH-001' },
-          { code: 'ZG-5621', packageId: pkg1.id, status: 'UNUSED', batchId: 'BATCH-001' },
-          { code: 'ZG-9043', packageId: pkg1.id, status: 'UNUSED', batchId: 'BATCH-001' },
+          { code: 'RL-8472', packageId: pkg1.id, tenantId: radaTenant.id, status: 'UNUSED', batchId: 'BATCH-001' },
+          { code: 'RL-1934', packageId: pkg1.id, tenantId: radaTenant.id, status: 'UNUSED', batchId: 'BATCH-001' },
+          { code: 'RL-5621', packageId: pkg1.id, tenantId: radaTenant.id, status: 'UNUSED', batchId: 'BATCH-001' },
+          { code: 'RL-9043', packageId: pkg1.id, tenantId: radaTenant.id, status: 'UNUSED', batchId: 'BATCH-001' },
         ],
       });
     }
   }
 
-  console.log('Database seeded successfully!');
+  console.log('Multi-tenant SaaS database seeded successfully!');
 }
 
 main()

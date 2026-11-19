@@ -1,5 +1,6 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import {
@@ -19,12 +20,8 @@ import {
   Clock,
   CheckCircle2,
   AlertCircle,
-  Zap,
-  Activity,
-  UserCheck,
-  ShieldAlert,
-  UserPlus,
-  RefreshCw
+  ExternalLink,
+  Globe
 } from "lucide-react";
 
 interface SidebarProps {
@@ -35,24 +32,65 @@ interface SidebarProps {
 
 export function Sidebar({ sessionCount = 1, voucherCount = 4, packageCount = 9 }: SidebarProps) {
   const pathname = usePathname();
+  const [tenantSlug, setTenantSlug] = useState("radalink");
+  const [tenantName, setTenantName] = useState("RADALINK NETWORKS");
+  const [ownerName, setOwnerName] = useState("Jeremy Kariuki");
+
+  useEffect(() => {
+    const storedSlug = localStorage.getItem("activeTenantSlug");
+    const storedName = localStorage.getItem("activeTenantName");
+    const storedOwner = localStorage.getItem("activeTenantOwner");
+    if (storedSlug) setTenantSlug(storedSlug);
+    if (storedName) setTenantName(storedName);
+    if (storedOwner) setOwnerName(storedOwner);
+  }, []);
+
+  const initials = ownerName
+    .split(" ")
+    .map((n) => n[0])
+    .join("")
+    .slice(0, 2)
+    .toUpperCase() || "JK";
 
   return (
     <aside className="w-64 bg-[#0d111a] border-r border-[#1a2233] flex flex-col h-screen select-none shrink-0 text-sm">
       {/* Brand Header */}
       <div className="h-14 px-4 flex items-center justify-between border-b border-[#1a2233]">
-        <Link href="/hotspot/overview" className="flex items-center gap-2.5 font-semibold text-white">
+        <Link href="/" className="flex items-center gap-2.5 font-semibold text-white">
           <div className="w-8 h-8 rounded-lg bg-gradient-to-tr from-cyan-500 via-indigo-600 to-purple-600 flex items-center justify-center text-white shadow-md shadow-indigo-500/20">
             <Radio className="w-4 h-4 text-white" />
           </div>
           <span className="text-base font-bold tracking-tight text-white">RadaLink</span>
         </Link>
-        <button className="text-slate-400 hover:text-white p-1 rounded hover:bg-[#1a2336] transition-colors">
+        <Link
+          href="/"
+          title="Back to SaaS Landing Page"
+          className="text-slate-400 hover:text-white p-1 rounded hover:bg-[#1a2336] transition-colors"
+        >
           <ChevronLeft className="w-4 h-4" />
-        </button>
+        </Link>
+      </div>
+
+      {/* Active Tenant / Portal Link Banner */}
+      <div className="px-3 pt-3">
+        <div className="p-2.5 rounded-xl bg-[#121929] border border-[#1e2a42]">
+          <div className="flex items-center justify-between text-[11px] text-slate-400 mb-1">
+            <span className="font-semibold text-slate-300">My Live Portal:</span>
+            <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+          </div>
+          <Link
+            href={`/p/${tenantSlug}`}
+            target="_blank"
+            className="flex items-center justify-between text-xs font-mono font-bold text-cyan-300 hover:text-white bg-[#0b101c] px-2.5 py-1.5 rounded-lg border border-[#1b263b] transition-colors group"
+          >
+            <span className="truncate">/p/{tenantSlug}</span>
+            <ExternalLink className="w-3.5 h-3.5 text-slate-400 group-hover:text-cyan-300 shrink-0" />
+          </Link>
+        </div>
       </div>
 
       {/* Search Input */}
-      <div className="px-3 py-3">
+      <div className="px-3 py-2">
         <div className="relative">
           <Search className="w-3.5 h-3.5 absolute left-3 top-2.5 text-slate-400" />
           <input
@@ -280,15 +318,15 @@ export function Sidebar({ sessionCount = 1, voucherCount = 4, packageCount = 9 }
         </div>
       </div>
 
-      {/* User Footer with Link to Login / Logout */}
+      {/* User Footer with Dynamic Name & Logout */}
       <div className="p-3 border-t border-[#1a2233] flex items-center justify-between">
         <Link href="/login" className="flex items-center gap-2.5 min-w-0 hover:opacity-80 transition-opacity">
           <div className="w-7 h-7 rounded-full bg-gradient-to-tr from-cyan-600 to-indigo-600 flex items-center justify-center text-xs font-bold text-white shrink-0">
-            JK
+            {initials}
           </div>
           <div className="min-w-0">
-            <p className="text-xs font-medium text-slate-200 truncate leading-tight">Jeremy Kariuki</p>
-            <p className="text-[10px] text-slate-400 truncate">RADALINK NETWORKS</p>
+            <p className="text-xs font-medium text-slate-200 truncate leading-tight">{ownerName}</p>
+            <p className="text-[10px] text-slate-400 truncate uppercase">{tenantName}</p>
           </div>
         </Link>
         <Link
